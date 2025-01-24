@@ -14,10 +14,10 @@ pipeline {
         }
         stage('deploy'){
             steps {
-                sh '''
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
     // some block
 }
+  sh '''
                     aws s3 cp --recursive dist/angular-frontend/ s3://frontend-project-bkt/
                 '''
             }
