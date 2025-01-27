@@ -1,25 +1,30 @@
 pipeline {
     agent any
+
     stages {
-        stage('pull'){
+        stage('Remove') {
             steps {
-                git branch: 'dev', url: 'https://github.com/Akashd-14/angular-frontend.git'
+                sh 'rm -rf *'
             }
         }
-        stage('build'){
+        stage('Pull') {
             steps {
-                sh '''npm install
-                    ng build '''
+                git branch: 'main', url: 'https://github.com/Akashd-14/front.git'
             }
         }
-        stage('deploy'){
+        stage('build') {
             steps {
-              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-   sh '''
-                    aws s3 cp --recursive dist/angular-frontend/ s3://frontend-project-bkt/
+                sh '''
+                npm install
+                ng build
                 '''
-}
-  
+            }
+        }
+        stage('Deploy') {
+            steps {
+            withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+       sh 'aws s3 cp --recursive dist/angular-frontend/ s3://cbz-frontend-project-aa/'
+              }
             }
         }
     }
